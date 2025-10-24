@@ -1,12 +1,11 @@
 import reflex as rx
-import reflex_enterprise as rxe
-from app.state import State
-from app.states.split_state import SplitState
-from app.states.merge_state import MergeState
-from app.states.compress_state import CompressState
-from app.states.pdf_to_images_state import PDFToImagesState
-from app.states.extract_pages_state import ExtractPagesState
-from app.states.rotate_pages_state import RotatePagesState
+from .state import State
+from .states.split_state import SplitState
+from .states.merge_state import MergeState
+from .states.compress_state import CompressState
+from .states.pdf_to_images_state import PDFToImagesState
+from .states.extract_pages_state import ExtractPagesState
+from .states.rotate_pages_state import RotatePagesState
 
 
 def tool_card(tool: dict) -> rx.Component:
@@ -58,22 +57,47 @@ def header() -> rx.Component:
     """
     return rx.el.header(
         rx.el.div(
-            rx.el.h1(
-                "PDF-o-matic",
-                class_name=rx.cond(
-                    State.is_dark,
-                    "text-2xl font-bold text-[#ECEFF4]",
-                    "text-2xl font-bold text-[#2E3440]",
+            rx.el.div(
+                rx.el.h1(
+                    "PDF-O-Matic",
+                    class_name=rx.cond(
+                        State.is_dark,
+                        "text-2xl font-bold text-[#ECEFF4]",
+                        "text-2xl font-bold text-[#2E3440]",
+                    ),
+                ),
+                rx.el.h3(
+                    "Quick tools for PDF manipulation",
+                    class_name=rx.cond(
+                        State.is_dark,
+                        "text-sm font-bold text-[#ECEFF4]",
+                        "text-sm font-bold text-[#2E3440]",
+                    ),
                 ),
             ),
-            rx.el.button(
-                rx.icon(rx.cond(State.is_dark, "sun", "moon"), class_name="h-6 w-6"),
-                on_click=State.toggle_theme,
-                class_name=rx.cond(
-                    State.is_dark,
-                    "p-2 rounded-full bg-[#4C566A] text-[#ECEFF4] hover:bg-[#5E81AC] transition-colors",
-                    "p-2 rounded-full bg-[#E5E9F0] text-[#2E3440] hover:bg-[#D8DEE9] transition-colors",
+            # Buttons on the left of the title
+            rx.el.div(
+                rx.el.button(
+                    rx.icon("globe", class_name="h-6 w-6"),
+                    on_click=State.toggle_language,
+                    class_name=rx.cond(
+                        State.is_dark,
+                        "p-2 rounded-full bg-[#4C566A] text-[#ECEFF4] hover:bg-[#5E81AC] transition-colors",
+                        "p-2 rounded-full bg-[#E5E9F0] text-[#2E3440] hover:bg-[#D8DEE9] transition-colors",
+                    ),
                 ),
+                rx.el.button(
+                    rx.icon(
+                        rx.cond(State.is_dark, "sun", "moon"), class_name="h-6 w-6"
+                    ),
+                    on_click=State.toggle_theme,
+                    class_name=rx.cond(
+                        State.is_dark,
+                        "p-2 rounded-full bg-[#4C566A] text-[#ECEFF4] hover:bg-[#5E81AC] transition-colors",
+                        "p-2 rounded-full bg-[#E5E9F0] text-[#2E3440] hover:bg-[#D8DEE9] transition-colors",
+                    ),
+                ),
+                class_name="flex items-center gap-2",
             ),
             class_name="container mx-auto flex justify-between items-center p-4",
         ),
@@ -121,7 +145,7 @@ def tool_page_layout(title: str, *children) -> rx.Component:
             rx.el.div(
                 rx.el.a(
                     rx.icon("arrow-left", class_name="h-4 w-4 mr-2"),
-                    "Back to Tools",
+                    State.back_to_tools_text,
                     href="/",
                     class_name=rx.cond(
                         State.is_dark,
@@ -158,13 +182,19 @@ def file_upload_component(
             rx.el.div(
                 rx.icon(tag="cloud-upload", class_name="w-12 h-12 mb-4 text-[#88C0D0]"),
                 rx.el.p(
-                    "Drag & drop files here, or click to select",
+                    rx.cond(
+                        State.language == "en",
+                        "Drag & drop files here, or click to select",
+                        "Arrastra y suelta archivos aquí, o haz clic para seleccionar",
+                    ),
                     class_name=rx.cond(
                         State.is_dark, "text-[#D8DEE9]", "text-[#4C566A]"
                     ),
                 ),
                 rx.el.span(
-                    "PDF files only",
+                    rx.cond(
+                        State.language == "en", "PDF files only", "Solo archivos PDF"
+                    ),
                     class_name=rx.cond(
                         State.is_dark,
                         "text-sm text-[#A3B2CC]",
@@ -196,7 +226,7 @@ def file_upload_component(
             class_name="mt-4 space-y-2",
         ),
         rx.el.button(
-            "Upload",
+            rx.cond(State.language == "en", "Upload", "Subir"),
             on_click=handler(rx.upload_files(upload_id=upload_id)),
             class_name="mt-4 w-full py-2 px-4 rounded-md text-white bg-[#5E81AC] hover:bg-[#81A1C1] transition-colors",
         ),
@@ -211,7 +241,9 @@ def file_upload_component(
             state.is_processing,
             rx.el.div(
                 rx.spinner(),
-                rx.el.p("Processing..."),
+                rx.el.p(
+                    rx.cond(State.language == "en", "Processing...", "Procesando...")
+                ),
                 class_name="flex items-center gap-2 mt-4",
             ),
         ),
@@ -224,7 +256,13 @@ def processed_message(state: rx.State) -> rx.Component:
         state.processed,
         rx.el.div(
             rx.icon(tag="square_check", class_name="w-5 h-5 text-green-500 mr-2"),
-            rx.el.p("Processing complete! Your download will begin shortly."),
+            rx.el.p(
+                rx.cond(
+                    State.language == "en",
+                    "Processing complete! Your download will begin shortly.",
+                    "¡Proceso completado! Tu descarga comenzará en breve.",
+                )
+            ),
             class_name="flex items-center mt-4 p-2 text-sm text-white bg-green-500/20 rounded-md border border-green-500",
         ),
     )
@@ -232,7 +270,7 @@ def processed_message(state: rx.State) -> rx.Component:
 
 def split_pdf() -> rx.Component:
     return tool_page_layout(
-        "Split PDF",
+        rx.cond(State.language == "en", "Split PDF", "Dividir PDF"),
         file_upload_component(
             SplitState, SplitState.handle_upload, False, "split_upload"
         ),
@@ -240,7 +278,11 @@ def split_pdf() -> rx.Component:
             SplitState.uploaded_file != "",
             rx.el.div(
                 rx.el.p(
-                    f"Total pages: {SplitState.total_pages}",
+                    rx.cond(
+                        State.language == "en",
+                        f"Total pages: {SplitState.total_pages}",
+                        f"Páginas totales: {SplitState.total_pages}",
+                    ),
                     class_name=rx.cond(
                         State.is_dark,
                         "text-sm text-[#D8DEE9] mb-2",
@@ -248,14 +290,22 @@ def split_pdf() -> rx.Component:
                     ),
                 ),
                 rx.el.input(
-                    placeholder="Enter page ranges (e.g., 1-3, 5, 7-9)",
+                    placeholder=rx.cond(
+                        State.language == "en",
+                        "Enter page ranges (e.g., 1-3, 5, 7-9)",
+                        "Introduce rangos de páginas (ej: 1-3, 5, 7-9)",
+                    ),
                     on_change=SplitState.set_split_ranges,
                     class_name="w-full p-2 border rounded-md bg-transparent mb-4",
                     border_color=rx.cond(State.is_dark, "#4C566A", "#D1D5DB"),
                     default_value=SplitState.split_ranges,
                 ),
                 rx.el.button(
-                    "Split PDF & Download",
+                    rx.cond(
+                        State.language == "en",
+                        "Split PDF & Download",
+                        "Dividir PDF y Descargar",
+                    ),
                     on_click=SplitState.split_pdf,
                     class_name="w-full py-2 px-4 rounded-md text-white bg-[#5E81AC] hover:bg-[#81A1C1] transition-colors",
                 ),
@@ -268,7 +318,7 @@ def split_pdf() -> rx.Component:
 
 def merge_pdf() -> rx.Component:
     return tool_page_layout(
-        "Merge PDF",
+        rx.cond(State.language == "en", "Merge PDF", "Unir PDF"),
         file_upload_component(
             MergeState, MergeState.handle_upload, True, "merge_upload"
         ),
@@ -276,7 +326,11 @@ def merge_pdf() -> rx.Component:
             MergeState.uploaded_files.length() > 0,
             rx.el.div(
                 rx.el.p(
-                    f"{MergeState.uploaded_files.length()} files selected.",
+                    rx.cond(
+                        State.language == "en",
+                        f"{MergeState.uploaded_files.length()} files selected.",
+                        f"{MergeState.uploaded_files.length()} archivos seleccionados.",
+                    ),
                     class_name=rx.cond(
                         State.is_dark,
                         "text-sm text-[#D8DEE9] mb-4",
@@ -284,7 +338,11 @@ def merge_pdf() -> rx.Component:
                     ),
                 ),
                 rx.el.button(
-                    "Merge PDFs & Download",
+                    rx.cond(
+                        State.language == "en",
+                        "Merge PDFs & Download",
+                        "Unir PDFs y Descargar",
+                    ),
                     on_click=MergeState.merge_pdfs,
                     class_name="w-full py-2 px-4 rounded-md text-white bg-[#5E81AC] hover:bg-[#81A1C1] transition-colors",
                 ),
@@ -297,7 +355,7 @@ def merge_pdf() -> rx.Component:
 
 def compress_pdf() -> rx.Component:
     return tool_page_layout(
-        "Compress PDF",
+        rx.cond(State.language == "en", "Compress PDF", "Comprimir PDF"),
         file_upload_component(
             CompressState, CompressState.handle_upload, False, "compress_upload"
         ),
@@ -305,7 +363,11 @@ def compress_pdf() -> rx.Component:
             CompressState.uploaded_file != "",
             rx.el.div(
                 rx.el.button(
-                    "Compress PDF & Download",
+                    rx.cond(
+                        State.language == "en",
+                        "Compress PDF & Download",
+                        "Comprimir PDF y Descargar",
+                    ),
                     on_click=CompressState.compress_pdf,
                     class_name="w-full py-2 px-4 rounded-md text-white bg-[#5E81AC] hover:bg-[#81A1C1] transition-colors",
                 ),
@@ -318,7 +380,7 @@ def compress_pdf() -> rx.Component:
 
 def pdf_to_images() -> rx.Component:
     return tool_page_layout(
-        "PDF to Images",
+        rx.cond(State.language == "en", "PDF to Images", "PDF a Imágenes"),
         file_upload_component(
             PDFToImagesState,
             PDFToImagesState.handle_upload,
@@ -329,7 +391,11 @@ def pdf_to_images() -> rx.Component:
             PDFToImagesState.uploaded_file != "",
             rx.el.div(
                 rx.el.button(
-                    "Convert to Images & Download ZIP",
+                    rx.cond(
+                        State.language == "en",
+                        "Convert to Images & Download ZIP",
+                        "Convertir a Imágenes y Descargar ZIP",
+                    ),
                     on_click=PDFToImagesState.convert_to_images,
                     class_name="w-full py-2 px-4 rounded-md text-white bg-[#5E81AC] hover:bg-[#81A1C1] transition-colors",
                 ),
@@ -342,7 +408,7 @@ def pdf_to_images() -> rx.Component:
 
 def extract_pages() -> rx.Component:
     return tool_page_layout(
-        "Extract Pages",
+        rx.cond(State.language == "en", "Extract Pages", "Extraer Páginas"),
         file_upload_component(
             ExtractPagesState,
             ExtractPagesState.handle_upload,
@@ -353,7 +419,11 @@ def extract_pages() -> rx.Component:
             ExtractPagesState.uploaded_file != "",
             rx.el.div(
                 rx.el.p(
-                    f"Total pages: {ExtractPagesState.total_pages}",
+                    rx.cond(
+                        State.language == "en",
+                        f"Total pages: {ExtractPagesState.total_pages}",
+                        f"Páginas totales: {ExtractPagesState.total_pages}",
+                    ),
                     class_name=rx.cond(
                         State.is_dark,
                         "text-sm text-[#D8DEE9] mb-2",
@@ -361,14 +431,22 @@ def extract_pages() -> rx.Component:
                     ),
                 ),
                 rx.el.input(
-                    placeholder="Enter pages to extract (e.g., 1,3-5)",
+                    placeholder=rx.cond(
+                        State.language == "en",
+                        "Enter pages to extract (e.g., 1,3-5)",
+                        "Introduce páginas a extraer (ej: 1,3-5)",
+                    ),
                     on_change=ExtractPagesState.set_page_selection,
                     class_name="w-full p-2 border rounded-md bg-transparent mb-4",
                     border_color=rx.cond(State.is_dark, "#4C566A", "#D1D5DB"),
                     default_value=ExtractPagesState.page_selection,
                 ),
                 rx.el.button(
-                    "Extract Pages & Download",
+                    rx.cond(
+                        State.language == "en",
+                        "Extract Pages & Download",
+                        "Extraer Páginas y Descargar",
+                    ),
                     on_click=ExtractPagesState.extract_pages,
                     class_name="w-full py-2 px-4 rounded-md text-white bg-[#5E81AC] hover:bg-[#81A1C1] transition-colors",
                 ),
@@ -381,7 +459,7 @@ def extract_pages() -> rx.Component:
 
 def rotate_pages() -> rx.Component:
     return tool_page_layout(
-        "Rotate Pages",
+        rx.cond(State.language == "en", "Rotate Pages", "Rotar Páginas"),
         file_upload_component(
             RotatePagesState,
             RotatePagesState.handle_upload,
@@ -392,9 +470,26 @@ def rotate_pages() -> rx.Component:
             RotatePagesState.uploaded_file != "",
             rx.el.div(
                 rx.el.select(
-                    rx.el.option("90 degrees clockwise", value="90"),
-                    rx.el.option("180 degrees", value="180"),
-                    rx.el.option("270 degrees clockwise", value="270"),
+                    rx.el.option(
+                        rx.cond(
+                            State.language == "en",
+                            "90 degrees clockwise",
+                            "90 grados en sentido horario",
+                        ),
+                        value="90",
+                    ),
+                    rx.el.option(
+                        rx.cond(State.language == "en", "180 degrees", "180 grados"),
+                        value="180",
+                    ),
+                    rx.el.option(
+                        rx.cond(
+                            State.language == "en",
+                            "270 degrees clockwise",
+                            "270 grados en sentido horario",
+                        ),
+                        value="270",
+                    ),
                     default_value=RotatePagesState.rotation_angle.to_string(),
                     on_change=RotatePagesState.set_rotation_angle,
                     class_name="w-full p-2 border rounded-md bg-transparent mb-4",
@@ -402,7 +497,11 @@ def rotate_pages() -> rx.Component:
                     border_color=rx.cond(State.is_dark, "#4C566A", "#D1D5DB"),
                 ),
                 rx.el.button(
-                    "Rotate PDF & Download",
+                    rx.cond(
+                        State.language == "en",
+                        "Rotate PDF & Download",
+                        "Rotar PDF y Descargar",
+                    ),
                     on_click=RotatePagesState.rotate_pdf,
                     class_name="w-full py-2 px-4 rounded-md text-white bg-[#5E81AC] hover:bg-[#81A1C1] transition-colors",
                 ),
@@ -413,7 +512,7 @@ def rotate_pages() -> rx.Component:
     )
 
 
-app = rxe.App(
+app = rx.App(
     theme=rx.theme(appearance="light"),
     head_components=[
         rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),
