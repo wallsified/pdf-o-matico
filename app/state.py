@@ -19,7 +19,15 @@ class State(rx.State):
 
     @rx.var
     def back_to_tools_text(self) -> str:
-        return "Back to Tools" if self.language == "en" else "Volver a Herramientas"
+        return "Back to Tools" if self.language == "en" else "Cambiar de Herramienta"
+
+    @rx.var
+    def subtitle_text(self) -> str:
+        return (
+            "Quick tools for PDF manipulation."
+            if self.language == "en"
+            else "Herramientas rápidas para manipulación de PDFs."
+        )
 
     @rx.var
     def tools(self) -> list[Tool]:

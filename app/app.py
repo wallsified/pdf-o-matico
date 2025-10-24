@@ -67,7 +67,7 @@ def header() -> rx.Component:
                     ),
                 ),
                 rx.el.h3(
-                    "Quick tools for PDF manipulation",
+                    State.subtitle_text,
                     class_name=rx.cond(
                         State.is_dark,
                         "text-sm font-bold text-[#ECEFF4]",
@@ -75,7 +75,6 @@ def header() -> rx.Component:
                     ),
                 ),
             ),
-            # Buttons on the left of the title
             rx.el.div(
                 rx.el.button(
                     rx.icon("globe", class_name="h-6 w-6"),
@@ -110,6 +109,35 @@ def header() -> rx.Component:
     )
 
 
+def footer() -> rx.Component:
+    """Renders the application footer."""
+    return rx.el.footer(
+        rx.el.div(
+            rx.el.div(
+                rx.el.p(f"\t PDF-O-Matic 2025 - ", class_name="text-sm"),
+                rx.el.div(
+                    rx.el.a(
+                        rx.icon("github", class_name="h-5 w-5"),
+                        href="https://github.com/wallsified/pdf-o-matic",
+                        target="_blank",
+                        class_name=rx.cond(
+                            State.is_dark,
+                            "text-[#D8DEE9] hover:text-[#ECEFF4]",
+                            "text-[#4C566A] hover:text-[#2E3440]",
+                        ),
+                    ),
+                    class_name="flex items-center gap-4",
+                ),
+                class_name="container mx-auto flex justify-between items-center p-4",
+            ),
+            class_name=rx.cond(
+                State.is_dark, "border-t border-[#3B4252]", "border-t border-[#E5E9F0]"
+            ),
+        )
+    )
+
+
+@rx.page(route="/", title="PDF-O-Matic", description="PDF-O-Matic Home")
 def index() -> rx.Component:
     """
     The main page of the application.
@@ -127,12 +155,13 @@ def index() -> rx.Component:
                 ),
                 class_name="container mx-auto p-8",
             ),
-            class_name="w-full h-full",
+            class_name="w-full h-full flex-1",
         ),
+        footer(),
         class_name=rx.cond(
             State.is_dark,
-            "min-h-screen font-['Open_Sans'] bg-[#2E3440] text-[#D8DEE9]",
-            "min-h-screen font-['Open_Sans'] bg-[#ECEFF4] text-[#2E3440]",
+            "min-h-screen flex flex-col font-['Red_Hat_Display'] bg-[#2E3440] text-[#D8DEE9]",
+            "min-h-screen flex flex-col font-['Red_Hat_Display'] bg-[#ECEFF4] text-[#2E3440]",
         ),
     )
 
@@ -163,12 +192,14 @@ def tool_page_layout(title: str, *children) -> rx.Component:
                 ),
                 *children,
                 class_name="container mx-auto p-8",
-            )
+            ),
+            class_name="flex-1",
         ),
+        footer(),
         class_name=rx.cond(
             State.is_dark,
-            "min-h-screen font-['Open_Sans'] bg-[#2E3440] text-[#D8DEE9]",
-            "min-h-screen font-['Open_Sans'] bg-[#ECEFF4] text-[#2E3440]",
+            "min-h-screen flex flex-col font-['Red_Hat_Display'] bg-[#2E3440] text-[#D8DEE9]",
+            "min-h-screen flex flex-col font-['Red_Hat_Display'] bg-[#ECEFF4] text-[#2E3440]",
         ),
     )
 
@@ -268,6 +299,7 @@ def processed_message(state: rx.State) -> rx.Component:
     )
 
 
+@rx.page(route="/split-pdf", title="Split PDF", description="PDF-o-Matic Split Tool")
 def split_pdf() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Split PDF", "Dividir PDF"),
@@ -316,6 +348,7 @@ def split_pdf() -> rx.Component:
     )
 
 
+@rx.page(route="/merge-pdf", title="Merge PDF", description="PDF-o-Matic Merge Tool")
 def merge_pdf() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Merge PDF", "Unir PDF"),
@@ -353,6 +386,9 @@ def merge_pdf() -> rx.Component:
     )
 
 
+@rx.page(
+    route="/compress-pdf", title="Compress PDF", description="PDF-o-Matic Compress Tool"
+)
 def compress_pdf() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Compress PDF", "Comprimir PDF"),
@@ -406,6 +442,11 @@ def pdf_to_images() -> rx.Component:
     )
 
 
+@rx.page(
+    route="/extract-pages",
+    title="Extract Pages",
+    description="PDF-o-Matic Image Extractor",
+)
 def extract_pages() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Extract Pages", "Extraer Páginas"),
@@ -457,6 +498,9 @@ def extract_pages() -> rx.Component:
     )
 
 
+@rx.page(
+    route="/rotate-pages", title="Rotate Pages", description="PDF-o-Matic Page Rotator"
+)
 def rotate_pages() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Rotate Pages", "Rotar Páginas"),
@@ -514,19 +558,7 @@ def rotate_pages() -> rx.Component:
 
 app = rx.App(
     theme=rx.theme(appearance="light"),
-    head_components=[
-        rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),
-        rx.el.link(rel="preconnect", href="https://fonts.gstatic.com", cross_origin=""),
-        rx.el.link(
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap",
-            rel="stylesheet",
-        ),
+    stylesheets=[
+        "https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@300;400;500;600;700;800;900&display=swap"
     ],
 )
-app.add_page(index)
-app.add_page(split_pdf, route="/split-pdf")
-app.add_page(merge_pdf, route="/merge-pdf")
-app.add_page(compress_pdf, route="/compress-pdf")
-app.add_page(pdf_to_images, route="/pdf-to-images")
-app.add_page(extract_pages, route="/extract-pages")
-app.add_page(rotate_pages, route="/rotate-pages")
