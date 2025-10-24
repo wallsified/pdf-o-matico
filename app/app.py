@@ -154,13 +154,13 @@ def index() -> rx.Component:
                 ),
                 class_name="container mx-auto p-8",
             ),
-            class_name="w-full h-full",
+            class_name="w-full h-full flex-1",
         ),
         footer(),
         class_name=rx.cond(
             State.is_dark,
-            "min-h-screen font-['Open_Sans'] bg-[#2E3440] text-[#D8DEE9]",
-            "min-h-screen font-['Open_Sans'] bg-[#ECEFF4] text-[#2E3440]",
+            "min-h-screen flex flex-col font-['Red_Hat_Display'] bg-[#2E3440] text-[#D8DEE9]",
+            "min-h-screen flex flex-col font-['Red_Hat_Display'] bg-[#ECEFF4] text-[#2E3440]",
         ),
     )
 
@@ -191,13 +191,14 @@ def tool_page_layout(title: str, *children) -> rx.Component:
                 ),
                 *children,
                 class_name="container mx-auto p-8",
-            )
+            ),
+            class_name="flex-1",
         ),
         footer(),
         class_name=rx.cond(
             State.is_dark,
-            "min-h-screen font-['Open_Sans'] bg-[#2E3440] text-[#D8DEE9]",
-            "min-h-screen font-['Open_Sans'] bg-[#ECEFF4] text-[#2E3440]",
+            "min-h-screen flex flex-col font-['Red_Hat_Display'] bg-[#2E3440] text-[#D8DEE9]",
+            "min-h-screen flex flex-col font-['Red_Hat_Display'] bg-[#ECEFF4] text-[#2E3440]",
         ),
     )
 
@@ -543,19 +544,9 @@ def rotate_pages() -> rx.Component:
 
 app = rx.App(
     theme=rx.theme(appearance="light"),
-    # head_components=[
-    #     rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),
-    #     rx.el.link(rel="preconnect", href="https://fonts.gstatic.com", cross_origin=""),
-    #     rx.el.link(
-    #         #href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap",
-    #         href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght400;600;700&display=swap",
-    #         rel="stylesheet",
-    #     ),
-    # ],
     stylesheets=[
-        "https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap",
+        "https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@300;400;500;600;700;800;900&display=swap"
     ],
-    style={"font_family": "Red Hat Display"},
 )
 app.add_page(index)
 app.add_page(split_pdf, route="/split-pdf")
