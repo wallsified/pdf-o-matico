@@ -18,6 +18,10 @@ class State(rx.State):
     language: str = "en"
 
     @rx.var
+    def back_to_tools_text(self) -> str:
+        return "Back to Tools" if self.language == "en" else "Volver a Herramientas"
+
+    @rx.var
     def tools(self) -> list[Tool]:
         """Get the list of tools based on the current language."""
         if self.language == "es":
