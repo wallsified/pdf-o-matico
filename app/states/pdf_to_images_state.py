@@ -58,7 +58,7 @@ class PDFToImagesState(rx.State, PDFToolState):
             base_name = os.path.splitext(self.uploaded_file)[0]
             with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
                 for i, page in enumerate(doc):
-                    pix = page.get_pixmap()
+                    pix = page.get_pixmap(dpi=300)
                     img_buffer = io.BytesIO()
                     img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
                     img.save(img_buffer, format="PNG")

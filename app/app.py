@@ -67,7 +67,7 @@ def header() -> rx.Component:
                     ),
                 ),
                 rx.el.h3(
-                    "Quick tools for PDF manipulation",
+                    State.subtitle_text,
                     class_name=rx.cond(
                         State.is_dark,
                         "text-sm font-bold text-[#ECEFF4]",
@@ -75,7 +75,6 @@ def header() -> rx.Component:
                     ),
                 ),
             ),
-            # Buttons on the left of the title
             rx.el.div(
                 rx.el.button(
                     rx.icon("globe", class_name="h-6 w-6"),
@@ -110,6 +109,36 @@ def header() -> rx.Component:
     )
 
 
+def footer() -> rx.Component:
+    """Renders the application footer."""
+    return rx.el.footer(
+        rx.el.div(
+            rx.el.div(
+                rx.el.p(
+                    f"\t 2024 PDF-O-Matic. All Rights Reserved.", class_name="text-sm"
+                ),
+                rx.el.div(
+                    rx.el.a(
+                        rx.icon("github", class_name="h-5 w-5"),
+                        href="https://github.com/reflex-dev/reflex",
+                        target="_blank",
+                        class_name=rx.cond(
+                            State.is_dark,
+                            "text-[#D8DEE9] hover:text-[#ECEFF4]",
+                            "text-[#4C566A] hover:text-[#2E3440]",
+                        ),
+                    ),
+                    class_name="flex items-center gap-4",
+                ),
+                class_name="container mx-auto flex justify-between items-center p-4",
+            ),
+            class_name=rx.cond(
+                State.is_dark, "border-t border-[#3B4252]", "border-t border-[#E5E9F0]"
+            ),
+        )
+    )
+
+
 def index() -> rx.Component:
     """
     The main page of the application.
@@ -129,6 +158,7 @@ def index() -> rx.Component:
             ),
             class_name="w-full h-full",
         ),
+        footer(),
         class_name=rx.cond(
             State.is_dark,
             "min-h-screen font-['Open_Sans'] bg-[#2E3440] text-[#D8DEE9]",
@@ -165,6 +195,7 @@ def tool_page_layout(title: str, *children) -> rx.Component:
                 class_name="container mx-auto p-8",
             )
         ),
+        footer(),
         class_name=rx.cond(
             State.is_dark,
             "min-h-screen font-['Open_Sans'] bg-[#2E3440] text-[#D8DEE9]",
