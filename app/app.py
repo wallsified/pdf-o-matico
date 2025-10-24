@@ -114,13 +114,11 @@ def footer() -> rx.Component:
     return rx.el.footer(
         rx.el.div(
             rx.el.div(
-                rx.el.p(
-                    f"\t 2024 PDF-O-Matic. All Rights Reserved.", class_name="text-sm"
-                ),
+                rx.el.p(f"\t PDF-O-Matic 2025 - ", class_name="text-sm"),
                 rx.el.div(
                     rx.el.a(
                         rx.icon("github", class_name="h-5 w-5"),
-                        href="https://github.com/reflex-dev/reflex",
+                        href="https://github.com/wallsified/pdf-o-matic",
                         target="_blank",
                         class_name=rx.cond(
                             State.is_dark,
@@ -545,14 +543,19 @@ def rotate_pages() -> rx.Component:
 
 app = rx.App(
     theme=rx.theme(appearance="light"),
-    head_components=[
-        rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),
-        rx.el.link(rel="preconnect", href="https://fonts.gstatic.com", cross_origin=""),
-        rx.el.link(
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap",
-            rel="stylesheet",
-        ),
+    # head_components=[
+    #     rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),
+    #     rx.el.link(rel="preconnect", href="https://fonts.gstatic.com", cross_origin=""),
+    #     rx.el.link(
+    #         #href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap",
+    #         href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght400;600;700&display=swap",
+    #         rel="stylesheet",
+    #     ),
+    # ],
+    stylesheets=[
+        "https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap",
     ],
+    style={"font_family": "Red Hat Display"},
 )
 app.add_page(index)
 app.add_page(split_pdf, route="/split-pdf")
