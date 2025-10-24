@@ -137,6 +137,7 @@ def footer() -> rx.Component:
     )
 
 
+@rx.page(route="/", title="PDF-O-Matic", description="PDF-O-Matic Home")
 def index() -> rx.Component:
     """
     The main page of the application.
@@ -298,6 +299,7 @@ def processed_message(state: rx.State) -> rx.Component:
     )
 
 
+@rx.page(route="/split-pdf", title="Split PDF", description="PDF-o-Matic Split Tool")
 def split_pdf() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Split PDF", "Dividir PDF"),
@@ -346,6 +348,7 @@ def split_pdf() -> rx.Component:
     )
 
 
+@rx.page(route="/merge-pdf", title="Merge PDF", description="PDF-o-Matic Merge Tool")
 def merge_pdf() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Merge PDF", "Unir PDF"),
@@ -383,6 +386,9 @@ def merge_pdf() -> rx.Component:
     )
 
 
+@rx.page(
+    route="/compress-pdf", title="Compress PDF", description="PDF-o-Matic Compress Tool"
+)
 def compress_pdf() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Compress PDF", "Comprimir PDF"),
@@ -436,6 +442,11 @@ def pdf_to_images() -> rx.Component:
     )
 
 
+@rx.page(
+    route="/extract-pages",
+    title="Extract Pages",
+    description="PDF-o-Matic Image Extractor",
+)
 def extract_pages() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Extract Pages", "Extraer Páginas"),
@@ -487,6 +498,9 @@ def extract_pages() -> rx.Component:
     )
 
 
+@rx.page(
+    route="/rotate-pages", title="Rotate Pages", description="PDF-o-Matic Page Rotator"
+)
 def rotate_pages() -> rx.Component:
     return tool_page_layout(
         rx.cond(State.language == "en", "Rotate Pages", "Rotar Páginas"),
@@ -548,10 +562,3 @@ app = rx.App(
         "https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@300;400;500;600;700;800;900&display=swap"
     ],
 )
-app.add_page(index)
-app.add_page(split_pdf, route="/split-pdf")
-app.add_page(merge_pdf, route="/merge-pdf")
-app.add_page(compress_pdf, route="/compress-pdf")
-app.add_page(pdf_to_images, route="/pdf-to-images")
-app.add_page(extract_pages, route="/extract-pages")
-app.add_page(rotate_pages, route="/rotate-pages")

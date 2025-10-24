@@ -12,3 +12,4 @@ apt-packages.txt
 plan.md
 uv.lock
 .ruff_cache
+uploaded_files
