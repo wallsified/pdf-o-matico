@@ -66,14 +66,28 @@ def header() -> rx.Component:
                     "text-2xl font-bold text-[#2E3440]",
                 ),
             ),
-            rx.el.button(
-                rx.icon(rx.cond(State.is_dark, "sun", "moon"), class_name="h-6 w-6"),
-                on_click=State.toggle_theme,
-                class_name=rx.cond(
-                    State.is_dark,
-                    "p-2 rounded-full bg-[#4C566A] text-[#ECEFF4] hover:bg-[#5E81AC] transition-colors",
-                    "p-2 rounded-full bg-[#E5E9F0] text-[#2E3440] hover:bg-[#D8DEE9] transition-colors",
+            rx.el.div(
+                rx.el.button(
+                    rx.icon("globe", class_name="h-6 w-6"),
+                    on_click=State.toggle_language,
+                    class_name=rx.cond(
+                        State.is_dark,
+                        "p-2 rounded-full bg-[#4C566A] text-[#ECEFF4] hover:bg-[#5E81AC] transition-colors",
+                        "p-2 rounded-full bg-[#E5E9F0] text-[#2E3440] hover:bg-[#D8DEE9] transition-colors",
+                    ),
                 ),
+                rx.el.button(
+                    rx.icon(
+                        rx.cond(State.is_dark, "sun", "moon"), class_name="h-6 w-6"
+                    ),
+                    on_click=State.toggle_theme,
+                    class_name=rx.cond(
+                        State.is_dark,
+                        "p-2 rounded-full bg-[#4C566A] text-[#ECEFF4] hover:bg-[#5E81AC] transition-colors",
+                        "p-2 rounded-full bg-[#E5E9F0] text-[#2E3440] hover:bg-[#D8DEE9] transition-colors",
+                    ),
+                ),
+                class_name="flex items-center gap-2",
             ),
             class_name="container mx-auto flex justify-between items-center p-4",
         ),
