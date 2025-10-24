@@ -1,6 +1,5 @@
 """Base state for all PDF tool pages."""
 
-import reflex as rx
 import pypdf
 import io
 import logging

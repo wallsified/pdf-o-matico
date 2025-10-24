@@ -1,12 +1,11 @@
 import reflex as rx
-import reflex_enterprise as rxe
-from app.state import State
-from app.states.split_state import SplitState
-from app.states.merge_state import MergeState
-from app.states.compress_state import CompressState
-from app.states.pdf_to_images_state import PDFToImagesState
-from app.states.extract_pages_state import ExtractPagesState
-from app.states.rotate_pages_state import RotatePagesState
+from .state import State
+from .states.split_state import SplitState
+from .states.merge_state import MergeState
+from .states.compress_state import CompressState
+from .states.pdf_to_images_state import PDFToImagesState
+from .states.extract_pages_state import ExtractPagesState
+from .states.rotate_pages_state import RotatePagesState
 
 
 def tool_card(tool: dict) -> rx.Component:
@@ -58,14 +57,25 @@ def header() -> rx.Component:
     """
     return rx.el.header(
         rx.el.div(
-            rx.el.h1(
-                "PDF-o-matic",
-                class_name=rx.cond(
-                    State.is_dark,
-                    "text-2xl font-bold text-[#ECEFF4]",
-                    "text-2xl font-bold text-[#2E3440]",
+            rx.el.div(
+                rx.el.h1(
+                    "PDF-O-Matic",
+                    class_name=rx.cond(
+                        State.is_dark,
+                        "text-2xl font-bold text-[#ECEFF4]",
+                        "text-2xl font-bold text-[#2E3440]",
+                    ),
+                ),
+                rx.el.h3(
+                    "Quick tools for PDF manipulation",
+                    class_name=rx.cond(
+                        State.is_dark,
+                        "text-sm font-bold text-[#ECEFF4]",
+                        "text-sm font-bold text-[#2E3440]",
+                    ),
                 ),
             ),
+            # Buttons on the left of the title
             rx.el.div(
                 rx.el.button(
                     rx.icon("globe", class_name="h-6 w-6"),
@@ -502,7 +512,7 @@ def rotate_pages() -> rx.Component:
     )
 
 
-app = rxe.App(
+app = rx.App(
     theme=rx.theme(appearance="light"),
     head_components=[
         rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),

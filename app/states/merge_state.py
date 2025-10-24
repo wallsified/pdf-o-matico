@@ -1,7 +1,7 @@
 """State for the Merge PDF tool page."""
 
 import reflex as rx
-from app.states.base_state import PDFToolState
+from .base_state import PDFToolState
 import pypdf
 import io
 import os

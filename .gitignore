@@ -1,4 +1,14 @@
+*.db
+.states
+assets/external/
+.web
+*.py[cod]
 .web/
 .states/
 __pycache__/
 /app/__pycache__/
+.venv/
+apt-packages.txt
+plan.md
+uv.lock
+.ruff_cache
